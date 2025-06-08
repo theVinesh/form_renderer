@@ -1,4 +1,4 @@
-import type {Schema} from "../types/Schema.ts";
+import type {Field, Schema} from "../types/Schema.ts";
 import {validateSchema} from "../Utils.ts";
 
 function DynamicForm({schemaText}: { schemaText: string }) {
@@ -8,6 +8,34 @@ function DynamicForm({schemaText}: { schemaText: string }) {
             fields: []
         }
     )
+
+    const renderField = (field: Field) => {
+        switch (field.type) {
+            case "text":
+                return <input type="text" id={field.name} name={field.name}/>
+            case "number":
+                return <input type="number" id={field.name} name={field.name}/>
+            case "select":
+                return (
+                    <select id={field.name} name={field.name}>
+                        {field.options?.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                )
+            case "checkbox":
+                return <input type="checkbox" id={field.name} name={field.name}/>
+            case "textarea":
+                return <textarea id={field.name} name={field.name}/>
+            case "date":
+                return <input type="date" id={field.name} name={field.name}/>
+            // todo multiselect
+            default:
+                return <input type="text" id={field.name} name={field.name}/>
+        }
+    }
     return (
         <>
             <h2>{schema.title}</h2>
@@ -15,7 +43,7 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                 {schema.fields.map((field) => (
                     <div key={field.name}>
                         <label htmlFor={field.name}>{field.label}</label>
-                        <input type={field.type} id={field.name} name={field.name}/>
+                        {renderField(field)}
                     </div>
                 ))}
                 <button type="submit">Submit</button>

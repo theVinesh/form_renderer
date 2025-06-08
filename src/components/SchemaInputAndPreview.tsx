@@ -6,7 +6,7 @@ function SchemaInputAndPreview({schemaText, setSchemaText}: {
 }) {
     return (
         <>
-            <div className="schema-input-and-preview">
+            <div className="schema-input-container">
                 <div className="schema-input">
                     <h4>Schema Input</h4>
                     <textarea value={schemaText} onChange={e => setSchemaText(e.target.value)}/>
