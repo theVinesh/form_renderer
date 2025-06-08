@@ -37,6 +37,6 @@ ___
 ## Bonus
 - [ ] Add support for one or more additional field types ( textarea , date , etc.)
 - [ ] Basic field validation messages
-- [ ] Modular architecture (custom hooks or reusable field components)
+- [x] Modular architecture (custom hooks or reusable field components)
 - [ ] Responsive design
 - [ ] Unit tests

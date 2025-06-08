@@ -1,18 +1,9 @@
-import type {Field, Schema} from "../types/Schema.ts";
-import {validateSchema} from "../Utils.ts";
-import {useCallback, useMemo, useState} from "react";
+import type {Field} from "../types/Schema.ts";
+import {useCallback, useState} from "react";
+import {useSchemaParser} from "../hooks/useSchemaParser.ts";
 
 function DynamicForm({schemaText}: { schemaText: string }) {
-    const schema: Schema = useMemo(
-        () => validateSchema(schemaText) ? JSON.parse(schemaText) : (
-            {
-                title: "Invalid Schema",
-                fields: []
-            }
-        ),
-        [schemaText]
-    )
-
+    const [schema, schemaError] = useSchemaParser(schemaText)
     const [formData, setFormData] = useState<Record<string, string | number | boolean>>({});
     const [submittedData, setSubmittedData] = useState<string | null>(null);
 
@@ -85,29 +76,34 @@ function DynamicForm({schemaText}: { schemaText: string }) {
         }
     }, [formData]);
 
-    return (
-        <>
-            <h2>{schema.title}</h2>
-            <form title={schema.title} onSubmit={handleSubmit}>
-                {schema.fields.map((field) => (
-                    <div key={field.name}>
-                        <label htmlFor={field.name}>{field.label}</label>
-                        {renderField(field)}
-                    </div>
-                ))}
-                <button type="submit">Submit</button>
-                {submittedData && (
-                    <div>
-                        <h3>Submitted Data</h3>
-                        <textarea
-                            value={submittedData}
-                            readOnly={true}
-                        />
-                    </div>
-                )}
-            </form>
-        </>
-    )
+    if (!schema) {
+        return <h2>{schemaError}</h2>
+    } else {
+        return (
+            <>
+                <h2>{schema.title}</h2>
+                <form title={schema.title} onSubmit={handleSubmit}>
+                    {schema.fields.map((field) => (
+                        <div key={field.name}>
+                            <label htmlFor={field.name}>{field.label}</label>
+                            {renderField(field)}
+                        </div>
+                    ))}
+                    <button type="submit">Submit</button>
+                    {submittedData && (
+                        <div>
+                            <h3>Submitted Data</h3>
+                            <textarea
+                                value={submittedData}
+                                readOnly={true}
+                            />
+                        </div>
+                    )}
+                </form>
+            </>
+        )
+    }
 }
+
 
 export default DynamicForm;
