@@ -1,16 +1,19 @@
 import type {Field, Schema} from "../types/Schema.ts";
 import {validateSchema} from "../Utils.ts";
-import {useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 
 function DynamicForm({schemaText}: { schemaText: string }) {
-    const schema: Schema = validateSchema(schemaText) ? JSON.parse(schemaText) : (
-        {
-            title: "Invalid Schema",
-            fields: []
-        }
+    const schema: Schema = useMemo(
+        () => validateSchema(schemaText) ? JSON.parse(schemaText) : (
+            {
+                title: "Invalid Schema",
+                fields: []
+            }
+        ),
+        [schemaText]
     )
 
-    const [formData, setFormData] = useState<Record<string, any>>({});
+    const [formData, setFormData] = useState<Record<string, string | number | boolean>>({});
     const [submittedData, setSubmittedData] = useState<string | null>(null);
 
     const handleChange = (fieldName: string, value: any) => {
@@ -26,13 +29,14 @@ function DynamicForm({schemaText}: { schemaText: string }) {
     }
 
 
-    const renderField = (field: Field) => {
+    const renderField = useCallback((field: Field) => {
         switch (field.type) {
             case "text":
                 return <input
                     type="text"
                     id={field.name}
                     name={field.name}
+                    value={formData[field.name] || ''}
                     onChange={event => handleChange(field.name, event.target.value)}
                 />
             case "number":
@@ -40,6 +44,7 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                     type="number"
                     id={field.name}
                     name={field.name}
+                    value={formData[field.name] || ''}
                     onChange={event => handleChange(field.name, event.target.value)}
                 />
             case "select":
@@ -47,6 +52,7 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                     <select
                         id={field.name}
                         name={field.name}
+                        value={formData[field.name] || field.options?.[0]}
                         onChange={event => handleChange(field.name, event.target.value)}
                     >
                         {field.options?.map((option) => (
@@ -61,21 +67,24 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                     type="checkbox"
                     id={field.name}
                     name={field.name}
-                    onChange={event => handleChange(field.name, event.target.value)}
+                    checked={formData[field.name] || false}
+                    onChange={event => handleChange(field.name, event.target.checked)}
                 />
             case "textarea":
                 return <textarea
                     id={field.name}
                     name={field.name}
+                    value={formData[field.name] || ''}
                     onChange={event => handleChange(field.name, event.target.value)}
                 />
             /* case "date":
                  return <input type="date" id={field.name} name={field.name}/>*/
             // todo multiselect
             default:
-                return <input type="text" id={field.name} name={field.name}/>
+                return <input type="text" id={field.name} name={field.name} value={formData[field.name] || ''}/>
         }
-    }
+    }, [formData]);
+
     return (
         <>
             <h2>{schema.title}</h2>
@@ -92,7 +101,7 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                         <h3>Submitted Data</h3>
                         <textarea
                             value={submittedData}
-                            readOnly = {true}
+                            readOnly={true}
                         />
                     </div>
                 )}

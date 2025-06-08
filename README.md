@@ -29,9 +29,9 @@ todo write intro here
 
 ___
 ## Requirements
-- [ ] Dynamically render all fields from the schema
-- [ ] Manage form state internally
-- [ ] On form submit, display the form data as formatted JSON below the form
+- [x] Dynamically render all fields from the schema
+- [x] Manage form state internally
+- [x] On form submit, display the form data as formatted JSON below the form
 - [ ] Show validation for required fields
 
 ## Bonus
