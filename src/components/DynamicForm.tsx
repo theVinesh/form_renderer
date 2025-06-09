@@ -2,6 +2,11 @@ import type {Field} from "../types/Schema.ts";
 import {useCallback, useState} from "react";
 import {useSchemaParser} from "../hooks/useSchemaParser.ts";
 import DateField from "./DateField.tsx";
+import TextField from "./TextField.tsx";
+import NumberField from "./NumberField.tsx";
+import SelectField from "./SelectField.tsx";
+import CheckboxField from "./CheckboxField.tsx";
+import TextareaField from "./TextareaField.tsx";
 
 function DynamicForm({schemaText}: { schemaText: string }) {
     const [schema, schemaError] = useSchemaParser(schemaText)
@@ -10,7 +15,6 @@ function DynamicForm({schemaText}: { schemaText: string }) {
     const [submittedData, setSubmittedData] = useState<string | null>(null);
 
     const handleChange = (fieldName: string, value: any) => {
-        console.log(`${fieldName} is changing`)
         setFormData((prevData) => ({
             ...prevData,
             [fieldName]: value
@@ -40,63 +44,65 @@ function DynamicForm({schemaText}: { schemaText: string }) {
     const renderField = useCallback((field: Field) => {
         switch (field.type) {
             case "text":
-                return <input
-                    type="text"
+                return <TextField
                     id={field.name}
                     name={field.name}
                     value={formData[field.name] || ''}
-                    onChange={event => handleChange(field.name, event.target.value)}
+                    onChange={(value) => handleChange(field.name, value)}
+                    error={errors[field.name] || ''}
                 />
             case "number":
-                return <input
-                    type="number"
+                return <NumberField
                     id={field.name}
                     name={field.name}
                     value={formData[field.name] || ''}
-                    onChange={event => handleChange(field.name, event.target.value)}
+                    onChange={(value) => handleChange(field.name, value)}
+                    error={errors[field.name] || ''}
                 />
             case "select":
-                return (
-                    <select
-                        id={field.name}
-                        name={field.name}
-                        value={formData[field.name] || field.options?.[0]}
-                        onChange={event => handleChange(field.name, event.target.value)}
-                    >
-                        {field.options?.map((option) => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
-                )
+                return <SelectField
+                    id={field.name}
+                    name={field.name}
+                    value={formData[field.name] || ''}
+                    onChange={(value) => handleChange(field.name, value)}
+                    error={errors[field.name] || ''}
+                    options={field.options || []}
+                />
             case "checkbox":
-                return <input
-                    type="checkbox"
+                return <CheckboxField
                     id={field.name}
                     name={field.name}
                     checked={formData[field.name] || false}
-                    onChange={event => handleChange(field.name, event.target.checked)}
+                    onChange={(checked) => handleChange(field.name, checked)}
+                    error={errors[field.name] || ''}
                 />
             case "textarea":
-                return <textarea
+                return <TextareaField
                     id={field.name}
                     name={field.name}
                     value={formData[field.name] || ''}
-                    onChange={event => handleChange(field.name, event.target.value)}
+                    onChange={(value) => handleChange(field.name, value)}
+                    error={errors[field.name] || ''}
                 />
             case "date":
-                return <DateField id={field.name}
-                                  label={field.label}
-                                  value={formData[field.name] || ''}
-                                  onChange={(value) => handleChange(field.name, value)}
-                                  error={errors[field.name] || ''}
+                return <DateField
+                    id={field.name}
+                    label={field.label}
+                    value={formData[field.name] || ''}
+                    onChange={(value) => handleChange(field.name, value)}
+                    error={errors[field.name] || ''}
                 />
             // todo multiselect
             default:
-                return <input type="text" id={field.name} name={field.name} value={formData[field.name] || ''}/>
+                return <TextField
+                    id={field.name}
+                    name={field.name}
+                    value={formData[field.name] || ''}
+                    onChange={(value) => handleChange(field.name, value)}
+                    error={errors[field.name] || ''}
+                />
         }
-    }, [formData]);
+    }, [formData, errors]);
 
     if (!schema) {
         return <h2>{schemaError}</h2>

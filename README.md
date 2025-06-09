@@ -32,10 +32,10 @@ ___
 - [x] Dynamically render all fields from the schema
 - [x] Manage form state internally
 - [x] On form submit, display the form data as formatted JSON below the form
-- [ ] Show validation for required fields
+- [x] Show validation for required fields
 
 ## Bonus
-- [ ] Add support for one or more additional field types ( textarea , date , etc.)
+- [x] Add support for one or more additional field types ( textarea , date , etc.)
 - [ ] Basic field validation messages
 - [x] Modular architecture (custom hooks or reusable field components)
 - [ ] Responsive design
