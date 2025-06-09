@@ -8,8 +8,8 @@ function App() {
     const defaultSchema: Schema = {
         title: "User Registration",
         fields: [
-            {label: "Name", type: "text", name: "name", required: true},
-            {label: "Age", type: "number", name: "age"},
+            {label: "Name", type: "text", name: "name"},
+            {label: "Dob", type: "date", name: "dob", required: true},
             {label: "Subscribe", type: "checkbox", name: "subscribe"},
             {
                 label: "Gender",

@@ -1,22 +1,39 @@
 import type {Field} from "../types/Schema.ts";
 import {useCallback, useState} from "react";
 import {useSchemaParser} from "../hooks/useSchemaParser.ts";
+import DateField from "./DateField.tsx";
 
 function DynamicForm({schemaText}: { schemaText: string }) {
     const [schema, schemaError] = useSchemaParser(schemaText)
-    const [formData, setFormData] = useState<Record<string, string | number | boolean>>({});
+    const [formData, setFormData] = useState<Record<string, any>>({});
+    const [errors, setErrors] = useState<Record<string, any>>({});
     const [submittedData, setSubmittedData] = useState<string | null>(null);
 
     const handleChange = (fieldName: string, value: any) => {
+        console.log(`${fieldName} is changing`)
         setFormData((prevData) => ({
             ...prevData,
             [fieldName]: value
         }))
     }
 
+    const validateForm = () => {
+        const errors: Record<string, any> = {};
+        schema?.fields.forEach((field) => {
+            if (field.required && !formData[field.name]) {
+                errors[field.name] = `${field.label} is required`;
+            }
+        });
+        return errors;
+    }
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setSubmittedData(JSON.stringify(formData, null, 2));
+        const validationErrors = validateForm();
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+            setSubmittedData(JSON.stringify(formData, null, 2));
+        }
     }
 
 
@@ -68,8 +85,13 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                     value={formData[field.name] || ''}
                     onChange={event => handleChange(field.name, event.target.value)}
                 />
-            /* case "date":
-                 return <input type="date" id={field.name} name={field.name}/>*/
+            case "date":
+                return <DateField id={field.name}
+                                  label={field.label}
+                                  value={formData[field.name] || ''}
+                                  onChange={(value) => handleChange(field.name, value)}
+                                  error={errors[field.name] || ''}
+                />
             // todo multiselect
             default:
                 return <input type="text" id={field.name} name={field.name} value={formData[field.name] || ''}/>
