@@ -118,7 +118,7 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                     ))}
                     <button type="submit">Submit</button>
                     {submittedData && (
-                        <div data-testid="submitted-data">
+                        <div className="submitted-data" data-testid="submitted-data">
                             <h3>Submitted Data</h3>
                             <textarea
                                 value={submittedData}

@@ -14,6 +14,7 @@ function TextareaField(
                 name={name}
                 value={value}
                 onChange={event => onChange(event.target.value)}
+                className={error ? 'error' : ''}
             />
             {error && <span className="error-message">{error}</span>}
         </div>

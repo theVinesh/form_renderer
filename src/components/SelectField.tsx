@@ -15,6 +15,7 @@ function SelectField(
                 name={name}
                 value={value || options[0]}
                 onChange={event => onChange(event.target.value)}
+                className={error ? 'error' : ''}
             >
                 {options.map((option) => (
                     <option key={option} value={option}>
