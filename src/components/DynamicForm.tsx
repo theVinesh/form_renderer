@@ -92,7 +92,6 @@ function DynamicForm({schemaText}: { schemaText: string }) {
                     onChange={(value) => handleChange(field.name, value)}
                     error={errors[field.name] || ''}
                 />
-            // todo multiselect
             default:
                 return <TextField
                     id={field.name}

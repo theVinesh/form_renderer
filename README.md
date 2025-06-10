@@ -39,4 +39,4 @@ ___
 - [ ] Basic field validation messages
 - [x] Modular architecture (custom hooks or reusable field components)
 - [ ] Responsive design
-- [ ] Unit tests
+- [x] Unit tests
