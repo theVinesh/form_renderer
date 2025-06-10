@@ -2,9 +2,21 @@
 
 > This app is a take-home assignment.
 
-todo write intro here
+## Demo
+- Published [here](https://form-renderer.vineshbuilds.app) for a quick look and to play around.
+- [video walkthrough](https://www.loom.com/share/a6655d53a6cf4d05b497265ae18c11e8?sid=e8fb731e-4a6c-42e3-976b-90ac9eaff161)
 
-🔗 [video walkthrough](todo url here https://thevinesh.com)
+## Description
+This is a simple form renderer, built with React and TypeScript that takes a JSON schema and renders a form based on it.
+It demonstrates modern React patterns with custom hooks, reusable components, and responsive design.
+It also demonstrates using `vitest` for writing unit tests for components and hooks.
+
+## Features
+- Input a JSON schema through a text area
+- Validate and Preview the schema
+- View the rendered form with various field types (text, number, textarea, date, select, checkbox)
+- Fill out the form with validation for required fields
+- Submit the form and see the collected data displayed as formatted JSON
 
 ## Setup
  
@@ -24,7 +36,6 @@ todo write intro here
   - date
   - select
   - checkbox
-  - multiselect
 - If an unknown field type is encountered, it will be rendered as a `text` type.
 
 ___
@@ -38,5 +49,5 @@ ___
 - [x] Add support for one or more additional field types ( textarea , date , etc.)
 - [ ] Basic field validation messages
 - [x] Modular architecture (custom hooks or reusable field components)
-- [ ] Responsive design
+- [x] Responsive design
 - [x] Unit tests
